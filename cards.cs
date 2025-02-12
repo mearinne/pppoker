@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using csuport;
+using System;
 
 public class cards : MonoBehaviour
 {
@@ -23,20 +24,20 @@ public class cards : MonoBehaviour
 
         List<string> xx = new List<string>();
         xx.Add("Q-1");
-        xx.Add("A-1");
+        xx.Add("K-1");
 
         List<string> yy = new List<string>();
-        yy.Add("Q-0");
         yy.Add("10-1");
+        yy.Add("A-1");
         yy.Add("8-1");
-        yy.Add("10-3");
-        yy.Add("6-1");
+        yy.Add("9-1");
+        yy.Add("J-1");
 
        //  print(isHighCard(xx));
 
         // List<string> duos = isTwoCardsSame(yy, xx);
 
-        List<string> duos = isFiveSameColorCards(yy, xx);
+        List<string> duos = isRoyalStraight(yy, xx);
 
         if (duos != null)
         {
@@ -45,6 +46,7 @@ public class cards : MonoBehaviour
                 print(d);
             }
         }
+        else print("duos is null");
 
     }
 
@@ -145,7 +147,7 @@ public class cards : MonoBehaviour
 
             for(int i = 0;i < cardNumber; i++) {
 
-                int index = Random.Range(0, numbers.Count);
+                int index = UnityEngine.Random.Range(0, numbers.Count);
 
                 slcCards.Add(cardList[numbers[index]]);
                 numbers.RemoveAt(index);
@@ -469,21 +471,276 @@ public class cards : MonoBehaviour
 
     public List<string> isDirtyStraight(List<string> cardBank, List<string> cardHand)
     {
-        return null;
+        
+           // print("I am here");
+            List<string> bankAndHand = new List<string>();
+            bankAndHand.AddRange(cardBank);
+            bankAndHand.AddRange(cardHand);
+
+            List<int> indexes = new List<int>();
+
+            List<string> temp = new List<string>();
+
+            for (int i = 0; i < bankAndHand.Count; i++)
+            {
+                string[] cardVal_and_cardCol = bankAndHand[i].Split("-");
+                indexes.Add(getIndexOfCard(cardVal_and_cardCol[0]));
+            }
+            indexes.Sort();
+
+            if (indexes[6] - indexes[5] == 1 && 
+                indexes[5] - indexes[4] == 1 &&
+                indexes[4] - indexes[3] == 1 &&
+                indexes[3] - indexes[2] == 1)
+            {
+                for(int i = indexes.Count-1;  i >= 2; i--) {
+
+                    temp.Add(getCardByIndex(indexes[i]));
+
+                }
+          //  print("Alfa");
+                return temp;
+            }
+            else if(indexes[5] - indexes[4] == 1 &&
+                    indexes[4] - indexes[3] == 1 &&
+                    indexes[3] - indexes[2] == 1 &&
+                    indexes[2] - indexes[1] == 1)
+            {
+                for (int i = indexes.Count - 2; i >= 1; i--)
+                {
+
+                    temp.Add(getCardByIndex(indexes[i]));
+
+                }
+          //  print("Beta");
+            return temp;
+            }
+            else if (indexes[4] - indexes[3] == 1 &&
+                    indexes[3] - indexes[2] == 1 &&
+                    indexes[2] - indexes[1] == 1 &&
+                    indexes[1] - indexes[0] == 1)
+            {
+                for (int i = indexes.Count - 3; i >= 0; i--)
+                {
+
+                    temp.Add(getCardByIndex(indexes[i]));
+
+                }
+         //   print("Gama");
+            return temp;
+            }
+
+
+            return null;
+        
     }
 
     public List<string> isFullHouse(List<string> cardBank, List<string> cardHand)
     {
+        List<string> bankAndHand = new List<string>();
+        bankAndHand.AddRange(cardBank);
+        bankAndHand.AddRange(cardHand);
+
+        List<int> indexes = new List<int>();
+
+        List<int> temp;
+
+        List<string> xcards = new List<string>();
+
+        for (int i = 0; i < bankAndHand.Count; i++)
+        {
+            string[] cardVal_and_cardCol = bankAndHand[i].Split("-");
+            indexes.Add(getIndexOfCard(cardVal_and_cardCol[0]));
+        }
+        indexes.Sort();
+
+        if (indexes[6] == indexes[5] && indexes[4] == indexes[3] && indexes[4] == indexes[2]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+        }
+        if (indexes[6] == indexes[5] && indexes[3] == indexes[2] && indexes[3] == indexes[1]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+        }
+        if (indexes[6] == indexes[5] && indexes[2] == indexes[1] && indexes[2] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+
+        if (indexes[5] == indexes[4] && indexes[3] == indexes[2] && indexes[3] == indexes[1]) {
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+        }
+        if (indexes[5] == indexes[4] && indexes[2] == indexes[1] && indexes[2] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+
+        if (indexes[4] == indexes[3] && indexes[2] == indexes[1] && indexes[2] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+
+        if (indexes[6] == indexes[5] && indexes[5] == indexes[4] && indexes[3] == indexes[2]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+        }
+        if (indexes[6] == indexes[5] && indexes[5] == indexes[4] && indexes[2] == indexes[1]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+        }
+        if (indexes[6] == indexes[5] && indexes[5] == indexes[4] && indexes[1] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[6]));
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+        
+        if (indexes[5] == indexes[4] && indexes[4] == indexes[3] && indexes[2] == indexes[1]) {
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+        }
+        if (indexes[5] == indexes[4] && indexes[4] == indexes[3] && indexes[1] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[5]));
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+        
+        if (indexes[4] == indexes[3] && indexes[4] == indexes[2] && indexes[1] == indexes[0]) {
+            xcards.Add(getCardByIndex(indexes[4]));
+            xcards.Add(getCardByIndex(indexes[3]));
+            xcards.Add(getCardByIndex(indexes[2]));
+            xcards.Add(getCardByIndex(indexes[1]));
+            xcards.Add(getCardByIndex(indexes[0]));
+        }
+        if(xcards.Count > 0) { return xcards; }
+
         return null;
     }
 
     public List<string> isStraight(List<string> cardBank, List<string> cardHand)
     {
+        List<string> result = new List<string>();
+        List<int> indexes = new List<int>();
+
+        if(isFiveSameColorCards(cardBank, cardHand) != null)
+        {
+            List<string> bankAndHand = isFiveSameColorCards(cardBank,cardHand);
+
+            for(int i = bankAndHand.Count - 1; i >= 0; i--)
+            {
+                string[] cardVal_and_cardCol = bankAndHand[i].Split("-");
+                indexes.Add(getIndexOfCard(cardVal_and_cardCol[0]));
+            }
+        
+        indexes.Sort();
+        print("indexes.Count: " + indexes.Count);
+
+        if (indexes[indexes.Count - 1] - indexes[indexes.Count - 2] == 1 &&
+            indexes[indexes.Count - 2] - indexes[indexes.Count - 3] == 1 &&
+            indexes[indexes.Count - 3] - indexes[indexes.Count - 4] == 1 &&
+            indexes[indexes.Count - 4] - indexes[indexes.Count - 5] == 1)
+        {
+            result.Add(getCardByIndex(indexes[indexes.Count - 1]));
+            result.Add(getCardByIndex(indexes[indexes.Count - 2]));
+            result.Add(getCardByIndex(indexes[indexes.Count - 3]));
+            result.Add(getCardByIndex(indexes[indexes.Count - 4]));
+            result.Add(getCardByIndex(indexes[indexes.Count - 5]));
+            return result;
+        }
+        if (indexes.Count == 6)
+        {
+            if (indexes[indexes.Count - 2] - indexes[indexes.Count - 3] == 1 &&
+                indexes[indexes.Count - 3] - indexes[indexes.Count - 4] == 1 &&
+                indexes[indexes.Count - 4] - indexes[indexes.Count - 5] == 1 &&
+                indexes[indexes.Count - 5] - indexes[indexes.Count - 6] == 1)
+            {   
+                result.Add(getCardByIndex(indexes[indexes.Count - 2]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 3]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 4]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 5]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 6]));
+                return result;
+            }
+        }
+        if (indexes.Count == 7)
+        {
+                if (indexes[indexes.Count - 2] - indexes[indexes.Count - 3] == 1 &&
+               indexes[indexes.Count - 3] - indexes[indexes.Count - 4] == 1 &&
+               indexes[indexes.Count - 4] - indexes[indexes.Count - 5] == 1 &&
+               indexes[indexes.Count - 5] - indexes[indexes.Count - 6] == 1)
+                {
+                    result.Add(getCardByIndex(indexes[indexes.Count - 2]));
+                    result.Add(getCardByIndex(indexes[indexes.Count - 3]));
+                    result.Add(getCardByIndex(indexes[indexes.Count - 4]));
+                    result.Add(getCardByIndex(indexes[indexes.Count - 5]));
+                    result.Add(getCardByIndex(indexes[indexes.Count - 6]));
+                    return result;
+                }
+
+                if (indexes[indexes.Count - 3] - indexes[indexes.Count - 4] == 1 &&
+                indexes[indexes.Count - 4] - indexes[indexes.Count - 5] == 1 &&
+                indexes[indexes.Count - 5] - indexes[indexes.Count - 6] == 1 &&
+                indexes[indexes.Count - 6] - indexes[indexes.Count - 7] == 1)
+            {
+                result.Add(getCardByIndex(indexes[indexes.Count - 3]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 4]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 5]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 6]));
+                result.Add(getCardByIndex(indexes[indexes.Count - 7]));
+                return result;
+            }
+        }
+        }
         return null;
     }
 
     public List<string> isRoyalStraight(List<string> cardBank, List<string> cardHand)
     {
+
+        if(isStraight(cardBank,cardHand) != null)
+        {
+              List<string> xcards = isStraight(cardBank, cardHand);
+
+
+              if (xcards[0] == "A") {
+                 print("heeeeeeeeereeeeeeeeeeeeeeeeee");
+                return xcards;
+              }
+              else { print("xcards[xcards.Count - 1]: " + xcards[xcards.Count - 1]); }
+           
+        }
+
         return null;
     }
 
