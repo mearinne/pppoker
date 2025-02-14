@@ -23,21 +23,21 @@ public class cards : MonoBehaviour
         // List<string> xc = selectedCards(4);
 
         List<string> xx = new List<string>();
-        xx.Add("Q-1");
-        xx.Add("K-1");
+        xx.Add("4-1");
+        xx.Add("2-1");
 
         List<string> yy = new List<string>();
         yy.Add("10-1");
         yy.Add("A-1");
         yy.Add("8-1");
-        yy.Add("9-1");
-        yy.Add("J-1");
+        yy.Add("3-1");
+        yy.Add("5-1");
 
        //  print(isHighCard(xx));
 
         // List<string> duos = isTwoCardsSame(yy, xx);
 
-        List<string> duos = isRoyalStraight(yy, xx);
+        List<string> duos = null;
 
         if (duos != null)
         {
@@ -132,6 +132,7 @@ public class cards : MonoBehaviour
 
     public List<string> selectedCards(int numberOfPlayers)
     {
+
         List<string> slcCards = new List<string>();
 
         List<int> numbers = new List<int>();
@@ -158,29 +159,7 @@ public class cards : MonoBehaviour
         return null;
     }
 
-    public string isHighCard(List<string> playerHand)
-    {
-       List<string> theHighestCard = new List<string>();
-        foreach (string card in playerHand)
-        {
-            string[] card_and_color = card.Split('-');
-            if (card_and_color[0] == "A" ||
-                card_and_color[0] == "K" ||
-                card_and_color[0] == "Q" ||
-                card_and_color[0] == "J") { theHighestCard.Add(card_and_color[0]); } 
-        }
-
-        if (theHighestCard.Count == 1) { return theHighestCard[0]; }
-        else if (theHighestCard.Count == 2)
-        {
-            if (getIndexOfCard(theHighestCard[0]) < getIndexOfCard(theHighestCard[1])) { return theHighestCard[1]; }
-            if (getIndexOfCard(theHighestCard[0]) > getIndexOfCard(theHighestCard[1])) { return theHighestCard[0]; }
-            if (getIndexOfCard(theHighestCard[0]) == getIndexOfCard(theHighestCard[1])) { return theHighestCard[1]; }
-        }
-
-        return null;
-    }
-
+   
 
     private int getIndexOfCard(string cardVal)
     {
@@ -197,6 +176,34 @@ public class cards : MonoBehaviour
         {
             return cardValues[index];
         }
+        return null;
+    }
+    public string isHighCard(List<string> cardBank, List<string> cardHand)
+    {
+        List<string> bankAndHand = new List<string>();
+        bankAndHand.AddRange(cardBank);
+        bankAndHand.AddRange(cardHand);
+
+        List<int> indexes = new List<int>();
+
+        List<string> temp = new List<string>();
+
+        for (int i = 0; i < bankAndHand.Count; i++)
+        {
+            string[] cardVal_and_cardCol = bankAndHand[i].Split("-");
+            indexes.Add(getIndexOfCard(cardVal_and_cardCol[0]));
+        }
+        indexes.Sort();
+
+        if (indexes[indexes.Count - 1] == 12 ||
+            indexes[indexes.Count - 1] == 11 ||
+            indexes[indexes.Count - 1] == 10 ||
+            indexes[indexes.Count - 1] == 9)
+        {
+            return getCardByIndex(indexes[indexes.Count - 1]);
+        }
+
+
         return null;
     }
 
@@ -295,22 +302,52 @@ public class cards : MonoBehaviour
         //   foreach(int indx in indexes) { print(indx); }
 
 
-        for (int i = indexes.Count - 1; i > 2; i--)
+        if (indexes[indexes.Count - 1] == indexes[indexes.Count-2] &&
+            indexes[indexes.Count - 2] == indexes[indexes.Count - 3] &&
+            indexes[indexes.Count - 3] == indexes[indexes.Count - 4])
         {
-            if (indexes[i] == indexes[i - 1] && indexes[i - 1] == indexes[i - 2] && indexes[i - 1] == indexes[i - 3])
-            {
-                if (getCardByIndex(indexes[i]) != null)
-                {
-                    temp.Add(getCardByIndex(indexes[i]));
-                    temp.Add(getCardByIndex(indexes[i - 1]));
-                    temp.Add(getCardByIndex(indexes[i - 2]));
-                    temp.Add(getCardByIndex(indexes[i - 3]));
-                }
-                if (temp.Count > 0) { return temp; }
-            }
+            temp.Add(getCardByIndex(indexes[indexes.Count - 1]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 2]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 3]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 4]));
+            return temp;
         }
 
+        if (indexes[indexes.Count - 2] == indexes[indexes.Count - 3] &&
+            indexes[indexes.Count - 3] == indexes[indexes.Count - 4] &&
+            indexes[indexes.Count - 4] == indexes[indexes.Count - 5])
+        {
+            
+            temp.Add(getCardByIndex(indexes[indexes.Count - 2]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 3]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 4]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 5]));
+            return temp;
+        }
 
+        if (indexes[indexes.Count - 3] == indexes[indexes.Count - 4] &&
+            indexes[indexes.Count - 4] == indexes[indexes.Count - 5] &&
+            indexes[indexes.Count - 5] == indexes[indexes.Count - 6])
+        {
+            
+            temp.Add(getCardByIndex(indexes[indexes.Count - 3]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 4]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 5]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 6]));
+            return temp;
+        }
+
+        if (indexes[indexes.Count - 4] == indexes[indexes.Count - 5] &&
+            indexes[indexes.Count - 5] == indexes[indexes.Count - 6] &&
+            indexes[indexes.Count - 6] == indexes[indexes.Count - 7])
+        {
+            
+            temp.Add(getCardByIndex(indexes[indexes.Count - 4]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 5]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 6]));
+            temp.Add(getCardByIndex(indexes[indexes.Count - 7]));
+            return temp;
+        }
         return null;
     }
 
@@ -488,49 +525,66 @@ public class cards : MonoBehaviour
             }
             indexes.Sort();
 
-            if (indexes[6] - indexes[5] == 1 && 
-                indexes[5] - indexes[4] == 1 &&
+      //  foreach (int i in indexes) { print(i); }
+
+        
+        if (indexes[6] - indexes[5] == 1 &&
+            indexes[5] - indexes[4] == 1 &&
+            indexes[4] - indexes[3] == 1 &&
+            indexes[3] - indexes[2] == 1)
+        {
+            for (int i = indexes.Count - 1; i >= 2; i--)
+            {
+
+                temp.Add(getCardByIndex(indexes[i]));
+
+            }
+            //  print("Alfa");
+            return temp;
+        }
+        else if (indexes[5] - indexes[4] == 1 &&
                 indexes[4] - indexes[3] == 1 &&
-                indexes[3] - indexes[2] == 1)
+                indexes[3] - indexes[2] == 1 &&
+                indexes[2] - indexes[1] == 1)
+        {
+            for (int i = indexes.Count - 2; i >= 1; i--)
             {
-                for(int i = indexes.Count-1;  i >= 2; i--) {
 
-                    temp.Add(getCardByIndex(indexes[i]));
+                temp.Add(getCardByIndex(indexes[i]));
 
-                }
-          //  print("Alfa");
-                return temp;
             }
-            else if(indexes[5] - indexes[4] == 1 &&
-                    indexes[4] - indexes[3] == 1 &&
-                    indexes[3] - indexes[2] == 1 &&
-                    indexes[2] - indexes[1] == 1)
-            {
-                for (int i = indexes.Count - 2; i >= 1; i--)
-                {
-
-                    temp.Add(getCardByIndex(indexes[i]));
-
-                }
-          //  print("Beta");
+            //  print("Beta");
             return temp;
-            }
-            else if (indexes[4] - indexes[3] == 1 &&
-                    indexes[3] - indexes[2] == 1 &&
-                    indexes[2] - indexes[1] == 1 &&
-                    indexes[1] - indexes[0] == 1)
+        }
+        else if (indexes[4] - indexes[3] == 1 &&
+                indexes[3] - indexes[2] == 1 &&
+                indexes[2] - indexes[1] == 1 &&
+                indexes[1] - indexes[0] == 1)
+        {
+            for (int i = indexes.Count - 3; i >= 0; i--)
             {
-                for (int i = indexes.Count - 3; i >= 0; i--)
-                {
 
-                    temp.Add(getCardByIndex(indexes[i]));
+                temp.Add(getCardByIndex(indexes[i]));
 
-                }
-         //   print("Gama");
-            return temp;
             }
+            //   print("Gama");
+            return temp;
+        }
 
-
+        if (indexes[6] == 12)
+        {
+            
+            temp.Add(getCardByIndex(indexes[6]));
+            foreach(int vl in indexes){
+                if(vl == 0 && !isInTheListAlready_string(temp, getCardByIndex(0))) { temp.Add(getCardByIndex(0)); }
+                if (vl == 1 && !isInTheListAlready_string(temp, getCardByIndex(1))) { temp.Add(getCardByIndex(1)); }
+                if (vl == 2 && !isInTheListAlready_string(temp, getCardByIndex(2))){ temp.Add(getCardByIndex(2)); }
+                if (vl == 3 && !isInTheListAlready_string(temp, getCardByIndex(3))) { temp.Add(getCardByIndex(3)); }
+            }
+            print("temp.Count: "+ temp.Count);
+            if (temp.Count == 5) { return temp; }
+        }
+    
             return null;
         
     }
@@ -721,6 +775,21 @@ public class cards : MonoBehaviour
                 return result;
             }
         }
+            if (indexes[indexes.Count-1] == 12)
+            {
+
+                result.Add(getCardByIndex(indexes[indexes.Count - 1]));
+                foreach (int vl in indexes)
+                {
+                    if (vl == 0 && !isInTheListAlready_string(result, getCardByIndex(0))) { result.Add(getCardByIndex(0)); }
+                    if (vl == 1 && !isInTheListAlready_string(result, getCardByIndex(1))) { result.Add(getCardByIndex(1)); }
+                    if (vl == 2 && !isInTheListAlready_string(result, getCardByIndex(2))) { result.Add(getCardByIndex(2)); }
+                    if (vl == 3 && !isInTheListAlready_string(result, getCardByIndex(3))) { result.Add(getCardByIndex(3)); }
+                }
+                print("temp.Count: " + result.Count);
+                if (result.Count == 5) { return result; }
+            }
+
         }
         return null;
     }
@@ -779,5 +848,23 @@ public class cards : MonoBehaviour
 
     }
 
+    private bool isInTheListAlready_string(List<string> aList, string checkedVal)
+    {
+
+        foreach (string i in aList)
+        {
+            if (i == checkedVal) return true;
+        }
+
+        return false;
+
+    }
+
+    private bool isAceInTheList(List<int> aList, int aceIndex)
+    {
+        foreach (int i in aList)
+        { if(i == aceIndex) return true; }
+        return false;
+    }
 
 }
