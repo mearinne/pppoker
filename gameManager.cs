@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using cardObj;
+using UnityEngine.UI;
+using TMPro;
+using playerStuff;
 
 public enum cardComb {high_card,one_pair,two_pair,three_of_a_kind,straight,flush,full_house,four_of_a_kind,straight_flush,royal_flush,nothing}
 public class gameManager : MonoBehaviour
@@ -19,6 +22,24 @@ public class gameManager : MonoBehaviour
 
     Dictionary<cardComb,string> cardCombDic;
 
+    public Slider mySlider;
+
+    public TextMeshProUGUI myInpuntField;
+
+    int myMoney;
+
+    public List<GameObject> objectsToHideAtStart;
+
+    public List<Sprite> sprites_piky;
+    public List<Sprite> sprites_srdce;
+    public List<Sprite> sprites_krize;
+    public List<Sprite> sprites_kary;
+
+    public List<GameObject> sprites_bankCards;
+
+    private playerSet myPlayerSet;
+
+    private List<player> myPlayers;
     private void Start()
     {
         numberOfPlayers = 2;
@@ -32,6 +53,16 @@ public class gameManager : MonoBehaviour
 
         StartCoroutine(doItLater(0.1f));
         //firstSteps();
+
+        myPlayerSet = new playerSet();
+
+        myPlayers = myPlayerSet.creationOfPlayer(numberOfPlayers);
+
+        myMoney = 250;
+
+        foreach(GameObject obj in objectsToHideAtStart) { obj.SetActive(false); }
+
+        print("Velikost myPlayers: " + myPlayers.Count);
     }
 
 
@@ -128,4 +159,24 @@ public class gameManager : MonoBehaviour
     }
 
 
+    public void sliderLogic()
+    {
+        mySlider.maxValue = myMoney;
+        mySlider.minValue = 10;
+        myInpuntField.text =  mySlider.value.ToString();
+        print("mySlider.value: " + mySlider.value);
+
+    }
+
+    public void hideShowObj(GameObject obj)
+    {
+        if (obj.activeSelf)
+        {
+            obj.SetActive(false);
+        }
+        else if (!obj.activeSelf)
+        {
+            obj.SetActive(true);
+        }
+    }
 }
