@@ -141,7 +141,7 @@ public class cards : MonoBehaviour
             numbers.Add(i);
         }
 
-        int cardNumber = (numberOfPlayers * 2) + 5;
+        int cardNumber = (numberOfPlayers * 2) + 5 + 2;
 
         if(cardNumber <= cardList.Count)
         {
@@ -161,7 +161,7 @@ public class cards : MonoBehaviour
 
    
 
-    private int getIndexOfCard(string cardVal)
+    public int getIndexOfCard(string cardVal)
     {
         for(int i = 0; i< cardValues.Count; i++)
         {

@@ -37,6 +37,9 @@ public class gameManager : MonoBehaviour
 
     public List<GameObject> sprites_bankCards;
 
+    public List<GameObject> playersCardsInHandOnTable_twoSprites;
+    public GameObject myCardsInHandOnTable_twoSprites;
+
     private playerSet myPlayerSet;
 
     private List<player> myPlayers;
@@ -51,6 +54,8 @@ public class gameManager : MonoBehaviour
         cardCombDic = new Dictionary<cardComb,string>();
         combinationInCorrectText();
 
+        setVisibilityOfTwoCardsOfPlayers();
+
         StartCoroutine(doItLater(0.1f));
         //firstSteps();
 
@@ -63,6 +68,8 @@ public class gameManager : MonoBehaviour
         foreach(GameObject obj in objectsToHideAtStart) { obj.SetActive(false); }
 
         print("Velikost myPlayers: " + myPlayers.Count);
+
+        
     }
 
 
@@ -70,6 +77,7 @@ public class gameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(secs);
         firstSteps();
+        setTableCards();
     }
 
     private void combinationInCorrectText() {
@@ -168,6 +176,41 @@ public class gameManager : MonoBehaviour
 
     }
 
+    private void setVisibilityOfTwoCardsOfPlayers()
+    {
+        for(int i = numberOfPlayers; i< playersCardsInHandOnTable_twoSprites.Count; i++)
+        {
+            playersCardsInHandOnTable_twoSprites[i].SetActive(false);
+        }
+    }
+
+    private void setTableCards()
+    {
+        // Set cards of player hands
+        for(int i = 0; i<numberOfPlayers; i++)
+        {
+            GameObject tableSpriteCards = playersCardsInHandOnTable_twoSprites[i];
+            SpriteRenderer twoCardsSprite_0 = tableSpriteCards.transform.GetChild(0).GetComponent<SpriteRenderer>();
+            SpriteRenderer twoCardsSprite_1 = tableSpriteCards.transform.GetChild(1).GetComponent<SpriteRenderer>();
+            List<string> cardx = playersCardsInHand[i];
+            twoCardsSprite_0.sprite = getCardSpriteByName(cardx[0]);
+            twoCardsSprite_1.sprite = getCardSpriteByName(cardx[1]);
+            print("player: " + i + " has a card: " + cardx[0]);
+            print("player: " + i + " has a card: " + cardx[1]);
+        }
+        // Set cards for bank. Only three for the beginning
+        for(int i = 0; i< 3; i++)
+        {
+            SpriteRenderer cardx = sprites_bankCards[i].GetComponent<SpriteRenderer>();
+            cardx.sprite = getCardSpriteByName(bankCards[i]);
+        }
+            GameObject myCard = myCardsInHandOnTable_twoSprites;
+            SpriteRenderer twoCardsSprite_0x = myCard.transform.GetChild(0).GetComponent<SpriteRenderer>();
+            SpriteRenderer twoCardsSprite_1x = myCard.transform.GetChild(1).GetComponent<SpriteRenderer>();
+            twoCardsSprite_0x.sprite = getCardSpriteByName(playersCardsInHand[playersCardsInHand.Count-1][0]);
+            twoCardsSprite_1x.sprite = getCardSpriteByName(playersCardsInHand[playersCardsInHand.Count-1][1]);
+    }
+
     public void hideShowObj(GameObject obj)
     {
         if (obj.activeSelf)
@@ -178,5 +221,29 @@ public class gameManager : MonoBehaviour
         {
             obj.SetActive(true);
         }
+    }
+
+    private Sprite getCardSpriteByName(string cardName)
+    {
+        string[] card_and_color = cardName.Split('-');
+        int indexOfCard = myCardsClass.getIndexOfCard(card_and_color[0]);
+        List<Sprite> cards = getCardListOfSpritesByCardColor(card_and_color[1]);
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: " + cards.Count);
+        return cards[indexOfCard];
+    }
+
+    private List<Sprite> getCardListOfSpritesByCardColor(string cardColor)
+    {
+        //  cardColors.Add("SRDCE");
+        // cardColors.Add("PIKY");
+        // cardColors.Add("KARY");
+        // cardColors.Add("LISTY");
+
+        if (cardColor == "0") return sprites_srdce;
+        else if (cardColor == "1") return sprites_piky;
+        else if (cardColor == "2") return sprites_kary;
+        else if (cardColor == "3") return sprites_krize;
+
+        return null;
     }
 }
